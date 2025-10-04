@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <stdint.h>
+
+// NOTE: No FPU hardware present in this test.
+// Example: STM32F103 (Cortex-M3) or any ARM Cortex-M0/M3 board.
+
+static inline uint32_t get_cycles(void) {
+    return DWT->CYCCNT;
+}
+
+int main(void) {
+    // Enable DWT cycle counter
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
+    float a = 1.234f, b = 2.345f, c;
+    uint32_t start, end;
+
+    // Warm-up to ensure consistent cache state (if available)
+    c = a * b;
+
+    // Benchmark 1000 floating-point multiplications (software emulation)
+    start = get_cycles();
+    for (int i = 0; i < 1000; i++) {
+        c = a * b;
+    }
+    end = get_cycles();
+
+    uint32_t cycles = end - start;
+    printf("Total cycles: %lu\n", cycles);
+    printf("Cycles per multiplication: %lu\n", cycles / 1000);
+
+    while (1);
+}
