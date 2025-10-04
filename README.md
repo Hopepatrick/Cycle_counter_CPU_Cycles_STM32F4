@@ -1,0 +1,2 @@
+# Cycle_counter_CPU_Cycles_STM32F4
+This is to demonstrate how microcontroller with Floating Point Unit FPU uses few cycles to calculate float numbers that the microcontroller without FPU. This program will run on STM32F4 Series
